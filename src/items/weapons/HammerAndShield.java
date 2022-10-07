@@ -74,7 +74,7 @@ public class HammerAndShield implements OneHandedWeaponAndShield {
 
     @Override
     public ActionResult guard() {
-        System.out.println("[🚨] 냄비뚜껑으로 다음 턴의 공격을 1회 가드합니다.\n");
+        System.out.println("[🚨] 냄비뚜껑으로 다음 턴의 공격을 1회 가드합니다.");
         setSurvivalMode(true);
         return new ActionResult("가드", 0);
     }

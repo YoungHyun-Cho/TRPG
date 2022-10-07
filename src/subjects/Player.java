@@ -46,7 +46,7 @@ public class Player implements Movable {
     }
 
     public void setHp(int hp) {
-        if (hp > maxHp) this.hp = maxHp;
+        if (this.hp > maxHp) this.hp = maxHp;
         else this.hp = hp;
     }
 
@@ -55,7 +55,8 @@ public class Player implements Movable {
     }
 
     public void setMp(int mp) {
-        this.mp = mp;
+        if (this.mp > maxMp) this.mp = maxMp;
+        else this.mp = mp;
     }
 
     public int getMaxHp() {
