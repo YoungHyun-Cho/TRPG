@@ -22,10 +22,6 @@ public class HpPotion implements Potion {
         return name;
     }
 
-    public int useItem() {
-        return quality;
-    }
-
     @Override
     public int getQuantity() {
         return quantity;
@@ -36,6 +32,3 @@ public class HpPotion implements Potion {
         this.quantity = quantity;
     }
 }
-
-
-// 이지모드, 노말모드, 하드모드, 헬모드에 따라 각 아이템 능력치 다르게 할 수 있도록

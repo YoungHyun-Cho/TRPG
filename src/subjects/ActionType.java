@@ -1,4 +1,4 @@
-package actions;
+package subjects;
 
 public enum ActionType {
     MOVE_FORWARD,
@@ -6,4 +6,6 @@ public enum ActionType {
     NORMAL_ATTACK,
     SKILL_ATTACK,
     SKILL_SURVIVAL,
+    RECOVER_HP,
+    RECOVER_MP
 }

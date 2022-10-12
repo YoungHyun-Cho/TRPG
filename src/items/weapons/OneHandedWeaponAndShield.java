@@ -1,5 +1,3 @@
 package items.weapons;
 
-public interface OneHandedWeaponAndShield extends Weapon, Guardable, Stunnable {
-
-}
+public interface OneHandedWeaponAndShield extends Guardable, Stunnable {}

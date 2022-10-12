@@ -1,27 +1,19 @@
 package actions;
 
 public class ActionResult {
-    String name;
-    int result;
+    private ActionResultType actionResultType;
+    private String message;
 
-    public ActionResult(String name, int result) {
-        this.name = name;
-        this.result = result;
+    public ActionResult(ActionResultType actionResultType, String message) {
+        this.actionResultType = actionResultType;
+        this.message = message;
     }
 
-    public int getResult() {
-        return result;
+    public ActionResultType getActionResultType() {
+        return actionResultType;
     }
 
-    public void setResult(int result) {
-        this.result = result;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public String getMessage() {
+        return message;
     }
 }

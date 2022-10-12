@@ -26,10 +26,6 @@ public class MpPotion implements Potion {
         return quantity;
     }
 
-    public int useItem() {
-        return quality;
-    }
-
     @Override
     public void setQuantity(int quantity) {
         this.quantity = quantity;

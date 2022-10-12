@@ -1,16 +1,15 @@
 package items.weapons;
 
 import actions.ActionResult;
+import actions.ActionResultType;
+import subjects.Enemy;
+import subjects.Player;
 
 public class HammerAndShield implements OneHandedWeaponAndShield {
     private String name = "뿅망치 & 냄비뚜껑";
-
     private int damage = 20;
-
     private int attackRange = 2;
-
     public boolean survivalMode = false;
-
     public boolean guarded = false;
 
     @Override
@@ -44,38 +43,58 @@ public class HammerAndShield implements OneHandedWeaponAndShield {
     }
 
     @Override
-    public ActionResult normalAttack(int distance) {
-        if (attackRange < Math.abs(distance)) return new ActionResult("OUT_OF_RANGE", -3);
+    public ActionResult normalAttack(Enemy enemy, int distance) {
+        if (attackRange < Math.abs(distance)) return new ActionResult(
+                ActionResultType.PLAYER_FAILURE_OUT_OF_RANGE,
+                "[🚫] 적이 사정거리 바깥에 있어 공격할 수 없습니다. 액션을 다시 선택해주세요."
+        );
         else {
-            System.out.println("[🚨] 후리기를 시전합니다.");
-            return new ActionResult("후리기", damage + (int) (Math.random() * 10));
+            int damage = this.damage + (int) (Math.random() * 10);
+            enemy.takeDamage(damage);
+            return new ActionResult(
+                    ActionResultType.PLAYER_SUCCESS,
+                    "[🚨] 후리기를 시전합니다.\n"
+            );
         }
     }
 
     @Override
-    public ActionResult skillAttack(int distance) {
-        if (attackRange < Math.abs(distance)) return new ActionResult("OUT_OF_RANGE", -3);
-        else return shieldCounterAttack();
+    public ActionResult skillAttack(Enemy enemy, int distance) {
+        if (attackRange < Math.abs(distance)) return new ActionResult(
+                ActionResultType.PLAYER_FAILURE_OUT_OF_RANGE,
+                "[🚫] 적이 사정거리 바깥에 있어 공격할 수 없습니다. 액션을 다시 선택해주세요."
+        );
+        else return shieldCounterAttack(enemy);
     }
 
     @Override
-    public ActionResult skillSurvival() {
+    public ActionResult skillSurvival(Player player, Enemy enemy) {
         return guard();
     }
 
-    public ActionResult shieldCounterAttack() {
+    public ActionResult shieldCounterAttack(Enemy enemy) {
         if (guarded) {
             guarded = false;
-            System.out.println("[🚨] 카운터 방패 치기를 시전합니다.");
-            return new ActionResult("카운터 방패 치기", damage + (int) (Math.random() * 30) + 60);
+            int damage = this.damage + (int) (Math.random() * 30) + 60;
+            enemy.takeDamage(damage);
+            System.out.printf("[🚨] 야생의 %s이 데미지 %d을(를) 입고 기절했습니다.\n", enemy.getName(), damage);
+            return new ActionResult(
+                    ActionResultType.PLAYER_SUCCESS,
+                    "[🚨] 카운터 방패 치기를 시전합니다."
+            );
         }
-        else return new ActionResult("CANNOT_COUNTER", -4);
+        else return new ActionResult(
+                ActionResultType.PLAYER_FAILURE_NOT_GUARDED_YET,
+                "[🚫] 아직 적의 공격을 가드하지 않아 카운터 방패 치기를 사용할 수 없습니다. 다시 입력해주세요."
+        );
     }
 
     @Override
     public ActionResult guard() {
-        System.out.println("[🚨] 냄비뚜껑으로 다음 턴의 공격을 1회 가드합니다.");
         setSurvivalMode(true);
-        return new ActionResult("가드", 0);
+        return new ActionResult(
+                ActionResultType.PLAYER_SUCCESS,
+                "[🚨] 냄비뚜껑으로 다음 턴의 공격을 1회 가드합니다."
+        );
     }
 }

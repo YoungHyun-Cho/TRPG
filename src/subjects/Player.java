@@ -1,12 +1,14 @@
 package subjects;
 
 import actions.ActionResult;
-import actions.ActionType;
+import actions.ActionResultType;
 import items.potions.HpPotion;
 import items.potions.MpPotion;
+import items.weapons.Guardable;
+import items.weapons.Stunnable;
 import items.weapons.Weapon;
 
-public class Player implements Movable {
+public class Player implements Movable, Attackable, Harmable, Recoverable {
 
     private String name;
     private int hp;
@@ -22,7 +24,9 @@ public class Player implements Movable {
     private MpPotion mpPotion;
     private Weapon weapon;
 
-    public Player(String name, int hp, int mp, int maxHp, int maxMp, int exp, int maxExp, int level, int position, HpPotion hpPotion, MpPotion mpPotion, Weapon weapon) {
+    public Player(String name, int hp, int mp, int maxHp, int maxMp,
+                  int exp, int maxExp, int level, int position,
+                  HpPotion hpPotion, MpPotion mpPotion, Weapon weapon) {
         this.name = name;
         this.hp = hp;
         this.mp = mp;
@@ -45,58 +49,28 @@ public class Player implements Movable {
         return hp;
     }
 
-    public void setHp(int hp) {
-        if (this.hp > maxHp) this.hp = maxHp;
-        else this.hp = hp;
-    }
-
     public int getMp() {
         return mp;
-    }
-
-    public void setMp(int mp) {
-        if (this.mp > maxMp) this.mp = maxMp;
-        else this.mp = mp;
     }
 
     public int getMaxHp() {
         return maxHp;
     }
 
-    public void setMaxHp(int maxHp) {
-        this.maxHp = maxHp;
-    }
-
     public int getMaxMp() {
         return maxMp;
-    }
-
-    public void setMaxMp(int maxMp) {
-        this.maxMp = maxMp;
     }
 
     public int getExp() {
         return exp;
     }
 
-    public void setExp(int exp) {
-        this.exp = exp;
-    }
-
     public int getMaxExp() {
         return maxExp;
     }
 
-    public void setMaxExp(int maxExp) {
-        this.maxExp = maxExp;
-    }
-
     public int getLevel() {
         return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
     }
 
     public int getPosition() {
@@ -111,16 +85,8 @@ public class Player implements Movable {
         return hpPotion;
     }
 
-    public void setHpPotion(HpPotion hpPotion) {
-        this.hpPotion = hpPotion;
-    }
-
     public MpPotion getMpPotion() {
         return mpPotion;
-    }
-
-    public void setMpPotion(MpPotion mpPotion) {
-        this.mpPotion = mpPotion;
     }
 
     public Weapon getWeapon() {
@@ -129,6 +95,11 @@ public class Player implements Movable {
 
     public void setWeapon(Weapon weapon) {
         this.weapon = weapon;
+    }
+
+    @Override
+    public void takeDamage(int damage) {
+        this.hp -= damage;
     }
 
     public boolean levelUp(int exp) {
@@ -147,40 +118,138 @@ public class Player implements Movable {
         return false;
     }
 
-    public ActionResult move(MoveDirection moveDirection) {
-        switch (moveDirection) {
-            case FORWARD: position += 1; break;
-            case BACKWARD: position -= 1; break;
-        }
-        return new ActionResult("앞으로 전진", 0);
+    @Override
+    public ActionResult recoverHp(int quantity) {
+
+        if (hpPotion.getQuantity() <= 0) return new ActionResult(
+                ActionResultType.PLAYER_FAILURE_NOT_ENOUGH_POTION,
+                "[🚫] HP 포션이 없습니다. 다른 액션을 선택해주세요."
+        );
+
+        if (this.hp + quantity > maxHp) this.hp = maxHp;
+        else this.hp += quantity;
+        hpPotion.setQuantity(hpPotion.getQuantity() - 1);
+        return new ActionResult(
+                ActionResultType.PLAYER_SUCCESS,
+                String.format("[🚨] HP포션을 사용하여 HP를 %d만큼 회복하였습니다.", hpPotion.getQuality())
+        );
     }
 
-    public ActionResult action(ActionType actionType, int distance) {
+    @Override
+    public ActionResult recoverMp(int quantity) {
 
-        ActionResult actionResult;
+        if (mpPotion.getQuantity() <= 0) return new ActionResult(
+                ActionResultType.PLAYER_FAILURE_NOT_ENOUGH_POTION,
+                "[🚫] MP 포션이 없습니다. 다른 액션을 선택해주세요."
+        );
 
-        switch (actionType) {
-            case NORMAL_ATTACK: actionResult = weapon.normalAttack(distance); break;
-            case SKILL_ATTACK: actionResult = weapon.skillAttack(distance); break;
-            default: actionResult = new ActionResult("SOMETHING_WENT_WRONG", -2);
-        }
-
-//        else actionResult = new ActionResult("OUT_OF_RANGE", -3);
-//        노말어택과 스킬 어택에서 사정거리 검사 직접해야 함. -> 차지는 사정거리에 상관없이 가능하지만, 방패치기는 사정거리에 영향 받음. -> 따로 해줘야함.
-        return actionResult;
+        if (this.mp + quantity > maxMp) this.mp = maxMp;
+        else this.mp += quantity;
+        mpPotion.setQuantity(mpPotion.getQuantity() - 1);
+        return new ActionResult(
+                ActionResultType.PLAYER_SUCCESS,
+                String.format("[🚨] MP포션을 사용하여 MP를 %d만큼 회복하였습니다.", mpPotion.getQuality())
+        );
     }
 
     public ActionResult action(ActionType actionType) {
+        switch (actionType) {
+            case RECOVER_HP: return recoverHp(hpPotion.getQuality());
+            case RECOVER_MP: return recoverMp(mpPotion.getQuality());
+            default: return new ActionResult(
+                    ActionResultType.PLAYER_FAILURE_WRONG_ACTION_TYPE,
+                    "ERR : 잘못된 액션 타입"
+            );
+        }
+    }
 
-        ActionResult actionResult;
+    public ActionResult action(ActionType actionType, Enemy enemy, int mpConsumption) {
+
+        int distance = enemy.getPosition() - position;
 
         switch (actionType) {
-            case MOVE_FORWARD: actionResult = move(MoveDirection.FORWARD); break;
-            case MOVE_BACKWARD: actionResult = move(MoveDirection.BACKWARD); break;
-            case SKILL_SURVIVAL: actionResult = weapon.skillSurvival(); break;
-            default: actionResult = new ActionResult("SOMETHING_WENT_WRONG", -2);
+            case MOVE_FORWARD: return move(MoveDirection.FORWARD, distance);
+            case MOVE_BACKWARD: return move(MoveDirection.BACKWARD, distance);
+            case NORMAL_ATTACK: return normalAttack(enemy, distance);
+            case SKILL_ATTACK: return skillAttack(enemy, distance, mpConsumption);
+            case SKILL_SURVIVAL: return skillSurvival(enemy, mpConsumption);
+            default: return new ActionResult(
+                    ActionResultType.PLAYER_FAILURE_WRONG_ACTION_TYPE,
+                    "ERR : 잘못된 액션 타입"
+            );
         }
+    }
 
-        return actionResult;
+    public ActionResult move(MoveDirection moveDirection, int distance) {
+
+        if (distance <= 0) return new ActionResult(
+                ActionResultType.PLAYER_FAILURE_CANNOT_MOVE_MORE,
+                "[🚫] 더 이상 전진할 수 없습니다. 다른 액션을 선택해주세요."
+        );
+        else if (distance > 10) return new ActionResult(
+                ActionResultType.PLAYER_FAILURE_CANNOT_MOVE_MORE,
+                "[🚫] 더 이상 물러날 수 없습니다. 다른 액션을 선택해주세요."
+        );
+        else {
+            switch (moveDirection) {
+                case FORWARD:
+                    position += 1;
+                    return new ActionResult(
+                            ActionResultType.PLAYER_SUCCESS,
+                            "[🚨] 적을 향해 1만큼 전진합니다."
+                    );
+                case BACKWARD:
+                    position -= 1;
+                    return new ActionResult(
+                            ActionResultType.PLAYER_SUCCESS,
+                            "[🚨] 적으로부터 1만큼 물러납니다. "
+                    );
+                default:
+                    return new ActionResult(
+                            ActionResultType.PLAYER_FAILURE,
+                            "ERR : 잘못된 이동 방향"
+                    );
+            }
+        }
+    }
+
+    @Override
+    public ActionResult normalAttack(Enemy enemy, int distance) {
+        return weapon.normalAttack(enemy, distance);
+    }
+
+    @Override
+    public ActionResult skillAttack(Enemy enemy, int distance, int mpConsumption) {
+
+        if (mp < mpConsumption) return new ActionResult(
+                ActionResultType.PLAYER_FAILURE_NOT_ENOUGH_MP,
+                "[🚫] MP가 부족하여 시전할 수 없습니다. 다른 액션을 선택해주세요."
+        );
+        else {
+            mp -= mpConsumption;
+            return weapon.skillAttack(enemy, distance);
+        }
+    }
+
+    @Override
+    public ActionResult skillSurvival(Enemy enemy, int mpConsumption) {
+
+        if (mp < mpConsumption) return new ActionResult(
+                ActionResultType.PLAYER_FAILURE_NOT_ENOUGH_MP,
+                "[🚫] MP가 부족하여 시전할 수 없습니다. 다른 액션을 선택해주세요."
+        );
+        else {
+            mp -= mpConsumption;
+            return weapon.skillSurvival(this, enemy);
+        }
+    }
+
+    public ActionResult guardEnemyAttack(Guardable guardableWeapon, String enemyName, String enemyAttackName, int damage) {
+        guardableWeapon.setSurvivalMode(false);
+        if (guardableWeapon instanceof Stunnable) ((Stunnable) guardableWeapon).setGuarded(true);
+        return new ActionResult(
+                ActionResultType.ENEMY_FAILURE_PLAYER_GUARDED,
+                String.format("[🚨] 야생의 %s이 시전한 %s를 가드하여 데미지 %d을(를) 방어하였습니다.", enemyAttackName, enemyAttackName, damage)
+        );
     }
 }
