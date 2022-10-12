@@ -61,7 +61,7 @@ public class HammerAndShield implements OneHandedWeaponAndShield {
             enemy.takeDamage(damage);
             return new ActionResult(
                     ActionResultType.PLAYER_SUCCESS,
-                    "[🚨] 후리기를 시전합니다."
+                    String.format("[🚨] 후리기를 시전하여 야생의 %s이 데미지 %d을(를) 입었습니다.", enemy.getName(), damage)
             );
         }
     }
@@ -85,10 +85,10 @@ public class HammerAndShield implements OneHandedWeaponAndShield {
             guarded = false;
             int damage = this.damage + (int) (Math.random() * 30) + 60;
             enemy.takeDamage(damage);
-            System.out.printf("[🚨] 야생의 %s이 데미지 %d을(를) 입고 기절했습니다.", enemy.getName(), damage);
+            enemy.setPassTurn(3);
             return new ActionResult(
                     ActionResultType.PLAYER_SUCCESS,
-                    "[🚨] 카운터 방패 치기를 시전합니다."
+                    String.format("[🚨] 카운터 방패 치기를 시전하여 야생의 %s이 데미지 %d을(를) 입고 기절했습니다.", enemy.getName(), damage)
             );
         }
         else return new ActionResult(

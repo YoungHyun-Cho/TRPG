@@ -57,10 +57,9 @@ public class BaseBallBat implements TwoHandedWeapon {
             int damage;
             damage = this.damage + (int) ((Math.random() * 5) + 30) * temp;
             enemy.takeDamage(damage);
-            System.out.printf("[🚨] 야생의 %s이 데미지 %d을(를) 입었습니다.", enemy.getName(), damage);
             return new ActionResult(
                     ActionResultType.PLAYER_SUCCESS,
-                    String.format("[🚨] %d차지 휘둘러치기를 시전합니다.", temp - 1)
+                    String.format("[🚨] %d차지 휘둘러치기를 시전하여 야생의 %s이 데미지 %d을(를) 입었습니다.", temp - 1, enemy.getName(), damage)
             );
         }
     }

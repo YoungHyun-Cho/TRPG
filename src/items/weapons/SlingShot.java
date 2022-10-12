@@ -40,10 +40,9 @@ public class SlingShot implements RangedWeapon {
             charge = 0;
             int damage = this.damage + (int) ((Math.random() * 5) + 20) * temp;
             enemy.takeDamage(damage);
-            System.out.printf("[🚨] 야생의 %s이 데미지 %d을(를) 입었습니다.", enemy.getName(), damage);
             return new ActionResult(
                     ActionResultType.PLAYER_SUCCESS,
-                    String.format("[🚨] %d차지 돌멩이 발사를 시전합니다.", temp - 1)
+                    String.format("[🚨] %d차지 돌멩이 발사를 시전하여 야생의 %s이 데미지 %d을(를) 입었습니다.", temp - 1, enemy.getName(), damage)
             );
         }
     }

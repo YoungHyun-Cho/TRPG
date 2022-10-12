@@ -248,7 +248,7 @@ public class Player implements Movable, Attackable, Harmable, Recoverable {
         if (guardableWeapon instanceof Stunnable) ((Stunnable) guardableWeapon).setGuarded(true);
         return new ActionResult(
                 ActionResultType.ENEMY_FAILURE_PLAYER_GUARDED,
-                String.format("[🚨] 야생의 %s이 시전한 %s를 가드하여 데미지 %d을(를) 방어하였습니다.", enemyAttackName, enemyAttackName, damage)
+                String.format("[🚨] 야생의 %s이 시전한 %s를 가드하여 데미지 %d을(를) 방어하였습니다.", enemyName, enemyAttackName, damage)
         );
     }
 }

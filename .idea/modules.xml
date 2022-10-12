@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TPRG.iml" filepath="$PROJECT_DIR$/TPRG.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TRPG.iml" filepath="$PROJECT_DIR$/TRPG.iml" />
     </modules>
   </component>
 </project>

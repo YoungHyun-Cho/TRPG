@@ -1,8 +1,8 @@
 package actions;
 
 public class ActionResult {
-    private ActionResultType actionResultType;
-    private String message;
+    private final ActionResultType actionResultType;
+    private final String message;
 
     public ActionResult(ActionResultType actionResultType, String message) {
         this.actionResultType = actionResultType;

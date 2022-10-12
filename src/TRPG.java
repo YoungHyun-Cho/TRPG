@@ -155,14 +155,14 @@ public class TRPG {
     public void printPlayerActionList() {
 
         System.out.println("[⭐️] 무엇을 하시겠습니까?");
-        System.out.println("(1)_앞으로 이동 (2)_뒤로 이동 ");
+        System.out.println("    (1)_앞으로 이동 (2)_뒤로 이동 ");
         switch (player.getWeapon().getName()) {
-            case "딱밤": System.out.println("(3)_딱밤 때리기 "); break;
-            case "야구 방망이": System.out.println("(3)_휘둘러치기 (4)_차지[MP-10] (5)_가드[MP-20] "); break;
-            case "뿅망치 & 냄비뚜껑": System.out.println("(3)_후리기 (4)_카운터 방패 치기[MP-10] (5)_가드[MP-20] "); break;
-            case "새총": System.out.println("(3)_돌멩이 발사 (4)_차지 [MP-10] (5)_백스텝 [MP-20] "); break;
+            case "딱밤": System.out.println("    (3)_딱밤 때리기 "); break;
+            case "야구 방망이": System.out.println("    (3)_휘둘러치기 (4)_차지[MP-10] (5)_가드[MP-20] "); break;
+            case "뿅망치 & 냄비뚜껑": System.out.println("    (3)_후리기 (4)_카운터 방패 치기[MP-10] (5)_가드[MP-20] "); break;
+            case "새총": System.out.println("    (3)_돌멩이 발사 (4)_차지 [MP-10] (5)_백스텝 [MP-20] "); break;
         }
-        System.out.println("(9)_HP포션 사용 [HP+100] (0)_MP포션 사용 [MP+100] (+)_게임 종료");
+        System.out.println("    (9)_HP포션 사용 [HP+100] (0)_MP포션 사용 [MP+100] (+)_게임 종료");
     }
 
     public void printBattleResult(Enemy enemy) {
@@ -182,8 +182,8 @@ public class TRPG {
             player.getMpPotion().setQuantity(player.getMpPotion().getQuantity() + 1);
 
         else if (dropItem instanceof Weapon) {
-            System.out.println("지금 바로 장착하시겠습니까?");
-            System.out.println("(1)_장착하기 (2)_버리기");
+            System.out.println("[⭐️] 지금 바로 장착하시겠습니까?");
+            System.out.println("    (1)_장착하기 (2)_버리기");
 
             String changeWeapon = "";
 
@@ -192,10 +192,10 @@ public class TRPG {
                 switch (changeWeapon) {
                     case "1":
                         player.setWeapon((Weapon) dropItem);
-                        System.out.printf("무기를 %s(으)로 교체하였습니다.\n", ((Weapon) dropItem).getName());
+                        System.out.printf("[⭐️] 무기를 %s(으)로 교체하였습니다.\n", ((Weapon) dropItem).getName());
                         break;
                     case "2":
-                        System.out.println("무기를 버렸습니다.");
+                        System.out.println("[⭐️] 무기를 버렸습니다.");
                         break;
                     default:
                         System.out.println("[🚫] 잘못 입력하셨습니다. 정확한 번호를 입력해주세요. ");

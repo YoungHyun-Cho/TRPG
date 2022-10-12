@@ -52,7 +52,7 @@ public class GameConfig {
                 playerName, 100, 100, 100, 100, 0, 10, 1, 0,
                 new HpPotion(100, 3),
                 new MpPotion(100, 3),
-                new DefaultWeapon("딱밤", 40, 1)
+                new DefaultWeapon("딱밤", 100, 1)
         );
     }
 
