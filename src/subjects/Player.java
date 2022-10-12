@@ -10,19 +10,18 @@ import items.weapons.Weapon;
 
 public class Player implements Movable, Attackable, Harmable, Recoverable {
 
-    private String name;
+    private final String name;
     private int hp;
     private int mp;
-
     private int maxHp;
     private int maxMp;
     private int exp;
     private int maxExp;
     private int level;
     private int position;
-    private HpPotion hpPotion;
-    private MpPotion mpPotion;
     private Weapon weapon;
+    private final HpPotion hpPotion;
+    private final MpPotion mpPotion;
 
     public Player(String name, int hp, int mp, int maxHp, int maxMp,
                   int exp, int maxExp, int level, int position,

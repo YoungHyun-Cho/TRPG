@@ -11,7 +11,7 @@ public class Main {
         String playerName = scanner.nextLine();
         System.out.println("잠시 후 게임을 시작합니다.");
         try { Thread.sleep(1000); } catch (Exception e) {}
-        System.out.println("############################################################");
+        System.out.println("############################################################\n");
 
         GameConfig gameConfig = new GameConfig(playerName);
 

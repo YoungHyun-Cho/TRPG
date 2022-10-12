@@ -7,10 +7,17 @@ import subjects.Player;
 
 public class SlingShot implements RangedWeapon {
 
-    private String name = "새총";
-    private int damage = 20;
-    private int attackRange = 10;
-    private int charge = 0;
+    private final String name;
+    private final int damage;
+    private final int attackRange;
+    private int charge;
+
+    public SlingShot(String name, int damage, int attackRange, int charge) {
+        this.name = name;
+        this.damage = damage;
+        this.attackRange = attackRange;
+        this.charge = charge;
+    }
 
     @Override
     public String getName() { return name; }
@@ -33,10 +40,10 @@ public class SlingShot implements RangedWeapon {
             charge = 0;
             int damage = this.damage + (int) ((Math.random() * 5) + 20) * temp;
             enemy.takeDamage(damage);
-            System.out.printf("[🚨] 야생의 %s이 데미지 %d을(를) 입었습니다.\n", enemy.getName(), damage);
+            System.out.printf("[🚨] 야생의 %s이 데미지 %d을(를) 입었습니다.", enemy.getName(), damage);
             return new ActionResult(
                     ActionResultType.PLAYER_SUCCESS,
-                    String.format("[🚨] %d차지 돌멩이 발사를 시전합니다.\n", temp - 1)
+                    String.format("[🚨] %d차지 돌멩이 발사를 시전합니다.", temp - 1)
             );
         }
     }
@@ -56,7 +63,7 @@ public class SlingShot implements RangedWeapon {
 
         if (charge < 3) return new ActionResult(
                 ActionResultType.PLAYER_SUCCESS,
-                String.format("[🚨] 차지를 시전합니다. 현재 차지 레벨 : %d\n", ++charge)
+                String.format("[🚨] 차지를 시전합니다. 현재 차지 레벨 : %d", ++charge)
         );
 
         else return new ActionResult(

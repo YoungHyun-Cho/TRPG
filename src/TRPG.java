@@ -7,21 +7,20 @@ import items.potions.MpPotion;
 import items.weapons.*;
 import subjects.Enemy;
 import subjects.Player;
-
 import java.util.Scanner;
 
 public class TRPG {
-    private Player player;
-    private Enemy[] enemies;
-    private Item[] items;
-    private GameConfig.MpConsumption mpComsumption;
+    private final Player player;
+    private final Enemy[] enemies;
+    private final Item[] items;
+    private final GameConfig.MpConsumption mpConsumption;
     Scanner scanner = new Scanner(System.in);
 
     public TRPG(Player player, Enemy[] enemies, Item[] items, GameConfig.MpConsumption mpComsumption) {
         this.player = player;
         this.enemies = enemies;
         this.items = items;
-        this.mpComsumption = mpComsumption;
+        this.mpConsumption = mpComsumption;
     }
 
     public boolean gameStart() {
@@ -33,7 +32,7 @@ public class TRPG {
 
             Enemy enemy = enemies[(int) (Math.random() * enemies.length)];
 
-            System.out.printf("[🚨] 야생의 %s🧟이(가) 나타났습니다. 🚨\n", enemy.getName());
+            System.out.printf("🚨 야생의 %s🧟이(가) 나타났습니다. 🚨\n", enemy.getName());
             System.out.println("*".repeat(70));
 
             while (enemy.getHp() > 0) {
@@ -45,35 +44,38 @@ public class TRPG {
 
                     String action = "";
 
-                    PLAYER_TURN:
                     while (true) {
                         printPlayerActionList();
                         action = scanner.nextLine();
                         ActionResult actionResult;
 
                         switch (action) {
-                            case "1": actionResult = player.action(ActionType.MOVE_FORWARD, enemy, mpComsumption.getMove()); break;
-                            case "2": actionResult = player.action(ActionType.MOVE_BACKWARD, enemy, mpComsumption.getMove()); break;
-                            case "3": actionResult = player.action(ActionType.NORMAL_ATTACK, enemy, mpComsumption.getNormalAttack()); break;
-                            case "4": actionResult = player.action(ActionType.SKILL_ATTACK, enemy, mpComsumption.getSkillAttack()); break;
-                            case "5": actionResult = player.action(ActionType.SKILL_SURVIVAL, enemy, mpComsumption.getSkillSurvival()); break;
+                            case "1": actionResult = player.action(ActionType.MOVE_FORWARD, enemy, mpConsumption.getMove()); break;
+                            case "2": actionResult = player.action(ActionType.MOVE_BACKWARD, enemy, mpConsumption.getMove()); break;
+                            case "3": actionResult = player.action(ActionType.NORMAL_ATTACK, enemy, mpConsumption.getNormalAttack()); break;
+                            case "4": actionResult = player.action(ActionType.SKILL_ATTACK, enemy, mpConsumption.getSkillAttack()); break;
+                            case "5": actionResult = player.action(ActionType.SKILL_SURVIVAL, enemy, mpConsumption.getSkillSurvival()); break;
                             case "9": actionResult = player.action(ActionType.RECOVER_HP);break;
                             case "0": actionResult = player.action(ActionType.RECOVER_MP); break;
                             case "+": break Game;
                             default: actionResult = new ActionResult(
-                                        ActionResultType.PLAYER_FAILURE_WRONG_NUMBER,
-                                        "[🚫] 잘못 입력하셨습니다. 정확한 번호를 입력해주세요."
+                                    ActionResultType.PLAYER_FAILURE_WRONG_NUMBER,
+                                    "[🚫] 잘못 입력하셨습니다. 정확한 번호를 입력해주세요.\n"
                             );
                         }
+
                         System.out.println(actionResult.getMessage());
                         if (actionResult.getActionResultType() == ActionResultType.PLAYER_SUCCESS) break;
                     }
+
+                    try { Thread.sleep(2000); } catch (Exception e) {}
 
                     if (enemy.getHp() < 0) {
                         printBattleResult(enemy);
                         try { Thread.sleep(2000); } catch (Exception e) {}
                         continue Game;
                     }
+                    System.out.println("*".repeat(70));
                 }
 
                 // 몹의 턴
@@ -81,11 +83,11 @@ public class TRPG {
                     ActionResult actionResult = enemy.action(player);
                     System.out.println(actionResult.getMessage());
                     if (actionResult.getActionResultType() == ActionResultType.ENEMY_FAILURE_IS_STUNNED) continue;
-                    try { Thread.sleep(1000); } catch (Exception e) {}
+                    try { Thread.sleep(2000); } catch (Exception e) {}
                     if (player.getHp() < 0) return false;
+                    System.out.println("*".repeat(70));
                 }
             }
-            System.out.println("*".repeat(70));
         }
         return true;
     }

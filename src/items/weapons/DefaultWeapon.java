@@ -6,9 +6,15 @@ import subjects.Enemy;
 import subjects.Player;
 
 public class DefaultWeapon implements Weapon {
-    private String name = "딱밤";
-    private int damage = 30;
-    private int attackRange = 1;
+    private final String name;
+    private final int damage;
+    private final int attackRange;
+
+    public DefaultWeapon(String name, int damage, int attackRange) {
+        this.name = name;
+        this.damage = damage;
+        this.attackRange = attackRange;
+    }
 
     public String getName() {
         return name;
@@ -28,7 +34,7 @@ public class DefaultWeapon implements Weapon {
             System.out.printf("[🚨] 야생의 %s이 데미지 %d을(를) 입었습니다.\n", enemy.getName(), damage);
             return new ActionResult(
                     ActionResultType.PLAYER_SUCCESS,
-                    "[🚨] 딱밤 때리기를 시전합니다.\n"
+                    String.format("[🚨] 딱밤 때리기를 시전하여 야생의 %s이 데미지 %d을(를) 입었습니다.\n", enemy.getName(), damage)
             );
         }
     }

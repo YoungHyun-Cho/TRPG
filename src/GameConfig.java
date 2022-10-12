@@ -52,7 +52,7 @@ public class GameConfig {
                 playerName, 100, 100, 100, 100, 0, 10, 1, 0,
                 new HpPotion(100, 3),
                 new MpPotion(100, 3),
-                new DefaultWeapon()
+                new DefaultWeapon("딱밤", 40, 1)
         );
     }
 
@@ -69,9 +69,9 @@ public class GameConfig {
         return new Item[] {
                 new HpPotion(100, 1),
                 new MpPotion(100, 1),
-                new BaseBallBat(),
-                new HammerAndShield(),
-                new SlingShot()
+                new BaseBallBat("야구 방망이", 50, 3, 0, false),
+                new HammerAndShield("뿅망치 & 냄비뚜껑", 20, 2, false, false),
+                new SlingShot("새총", 20, 10, 0)
         };
     }
 

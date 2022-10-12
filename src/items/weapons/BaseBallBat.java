@@ -6,11 +6,19 @@ import subjects.Enemy;
 import subjects.Player;
 
 public class BaseBallBat implements TwoHandedWeapon {
-    private String name = "야구 방망이";
-    private int damage = 50;
-    private int attackRange = 3;
-    private int charge = 0;
-    private boolean survivalMode = false;
+    private final String name;
+    private final int damage;
+    private final int attackRange;
+    private int charge;
+    private boolean survivalMode;
+
+    public BaseBallBat(String name, int damage, int attackRange, int charge, boolean survivalMode) {
+        this.name = name;
+        this.damage = damage;
+        this.attackRange = attackRange;
+        this.charge = charge;
+        this.survivalMode = survivalMode;
+    }
 
     @Override
     public boolean isSurvivalMode() {
@@ -46,12 +54,13 @@ public class BaseBallBat implements TwoHandedWeapon {
         else {
             int temp = charge + 1;
             charge = 0;
+            int damage;
             damage = this.damage + (int) ((Math.random() * 5) + 30) * temp;
             enemy.takeDamage(damage);
-            System.out.printf("[🚨] 야생의 %s이 데미지 %d을(를) 입었습니다.\n", enemy.getName(), damage);
+            System.out.printf("[🚨] 야생의 %s이 데미지 %d을(를) 입었습니다.", enemy.getName(), damage);
             return new ActionResult(
                     ActionResultType.PLAYER_SUCCESS,
-                    String.format("[🚨] %d차지 휘둘러치기를 시전합니다.\n", temp - 1)
+                    String.format("[🚨] %d차지 휘둘러치기를 시전합니다.", temp - 1)
             );
         }
     }
@@ -68,7 +77,7 @@ public class BaseBallBat implements TwoHandedWeapon {
     public ActionResult charge() {
         if (charge < 3) return new ActionResult(
                 ActionResultType.PLAYER_SUCCESS,
-                String.format("[🚨] 차지를 시전합니다. 현재 차지 레벨 : %d\n", ++charge)
+                String.format("[🚨] 차지를 시전합니다. 현재 차지 레벨 : %d", ++charge)
         );
         else return new ActionResult(
                 ActionResultType.PLAYER_FAILURE_CANNOT_CHARGE_MORE,

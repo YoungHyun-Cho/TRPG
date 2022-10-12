@@ -6,11 +6,19 @@ import subjects.Enemy;
 import subjects.Player;
 
 public class HammerAndShield implements OneHandedWeaponAndShield {
-    private String name = "뿅망치 & 냄비뚜껑";
-    private int damage = 20;
-    private int attackRange = 2;
-    public boolean survivalMode = false;
-    public boolean guarded = false;
+    private final String name;
+    private final int damage;
+    private final int attackRange;
+    public boolean survivalMode;
+    public boolean guarded;
+
+    public HammerAndShield(String name, int damage, int attackRange, boolean survivalMode, boolean guarded) {
+        this.name = name;
+        this.damage = damage;
+        this.attackRange = attackRange;
+        this.survivalMode = survivalMode;
+        this.guarded = guarded;
+    }
 
     @Override
     public String getName() {
@@ -53,7 +61,7 @@ public class HammerAndShield implements OneHandedWeaponAndShield {
             enemy.takeDamage(damage);
             return new ActionResult(
                     ActionResultType.PLAYER_SUCCESS,
-                    "[🚨] 후리기를 시전합니다.\n"
+                    "[🚨] 후리기를 시전합니다."
             );
         }
     }
@@ -77,7 +85,7 @@ public class HammerAndShield implements OneHandedWeaponAndShield {
             guarded = false;
             int damage = this.damage + (int) (Math.random() * 30) + 60;
             enemy.takeDamage(damage);
-            System.out.printf("[🚨] 야생의 %s이 데미지 %d을(를) 입고 기절했습니다.\n", enemy.getName(), damage);
+            System.out.printf("[🚨] 야생의 %s이 데미지 %d을(를) 입고 기절했습니다.", enemy.getName(), damage);
             return new ActionResult(
                     ActionResultType.PLAYER_SUCCESS,
                     "[🚨] 카운터 방패 치기를 시전합니다."

@@ -6,13 +6,13 @@ import items.weapons.Guardable;
 
 public class Enemy implements Movable, Harmable {
 
-    private String name;
+    private final String name;
+    private final int damage;
+    private final int exp;
+    private final int[] dropItemIndex;
+    private final int maxHp;
     private int hp;
-    private int maxHp;
-    private int damage;
-    private int exp;
     private int position;
-    private int[] dropItemIndex;
 
     private int passTurn = 0;
 
@@ -79,56 +79,47 @@ public class Enemy implements Movable, Harmable {
         }
     }
 
-    // 꼬집기
     public ActionResult pinch(Player player) {
 
         int damage = this.damage + (int) (Math.random() * 3);
-        String enemyAttackName = "꼬집기🤏";
-        return attack(player, enemyAttackName, damage);
+        return attack(player, "꼬집기🤏", damage);
     }
 
-    // 몸통 박치기
     public ActionResult crash(Player player) {
 
         int damage = this.damage + (int) (Math.random() * 5);
-        String enemyAttackName = "몸통 박치기💥";
-        return attack(player, enemyAttackName, damage);
+        return attack(player, "몸통 박치기💥", damage);
 
     }
 
-    // 깨물기
     public ActionResult bite(Player player) {
 
         int damage = this.damage + (int) (Math.random() * 10);
-        String enemyAttackName = "깨물기🦷";
-        return attack(player, enemyAttackName, damage);
+        return attack(player, "깨물기🦷", damage);
 
     }
 
-    // 소리 지르기
     public ActionResult scream(Player player) {
 
         int damage = this.damage + (int) (Math.random() * 3);
-        String enemyAttackName = "소리 지르기😱";
-        return attack(player, enemyAttackName, damage);
+        return attack(player, "소리 지르기😱", damage);
 
     }
 
-    // 돌 던지기
     public ActionResult throwStone(Player player) {
 
         int damage = this.damage + (int) (Math.random() * 5);
-        String enemyAttackName = "돌 던지기🪨";
-        return attack(player, enemyAttackName, damage);
+        return attack(player, "돌 던지기🪨", damage);
 
     }
 
     @Override
     public ActionResult move(MoveDirection moveDirection, int distance) {
+
         position -= 1;
         return new ActionResult(
                 ActionResultType.ENEMY_SUCCESS_MOVE_FORWARD,
-                String.format("[🚨] 야생의 %s이 플레이어를 향해 1만큼 전진했습니다.\n", name)
+                String.format("[🚨] 야생의 %s이 플레이어를 향해 1만큼 전진했습니다.", name)
         );
     }
 
@@ -138,40 +129,34 @@ public class Enemy implements Movable, Harmable {
             passTurn -= 1;
             return new ActionResult(
                     ActionResultType.ENEMY_FAILURE_IS_STUNNED,
-                    String.format("[🚨] 야생의 %s이(가) 기절하여 아무것도 하지 못합니다.\n", name)
+                    String.format("[🚨] 야생의 %s이(가) 기절하여 아무것도 하지 못합니다.", name)
             );
         }
 
         int distance = position - player.getPosition();
-        ActionResult actionResult;
 
-        // 1 이하의 거리에서는 근거리 공격만 가능함.
         if (Math.abs(distance) <= 1) {
             int randomNum = (int) (Math.random() * 9);
             switch (randomNum) {
                 case 0:
-                case 1: actionResult = bite(player); break;
+                case 1: return bite(player);
                 case 2:
                 case 3:
-                case 4: actionResult = crash(player); break;
-                default: actionResult = pinch(player);
+                case 4: return crash(player);
+                default: return pinch(player);
             }
         }
 
-        // 2 ~ 5의 거리에서는 원거리 공격 및 접근이 가능함.
         else if (Math.abs(distance) <= 5) {
             int randomNum = (int) (Math.random() * 7);
             switch (randomNum) {
-                case 0: actionResult = throwStone(player); break;
+                case 0: return throwStone(player);
                 case 1:
-                case 2: actionResult = scream(player); break;
-                default: actionResult = move(MoveDirection.FORWARD, distance);
+                case 2: return scream(player);
+                default: return  move(MoveDirection.FORWARD, distance);
             }
         }
 
-        // 6 이상의 거리에서는 접근만 가능함.
-        else actionResult = move(MoveDirection.FORWARD, distance);
-
-        return actionResult;
+        else return move(MoveDirection.FORWARD, distance);
     }
 }
