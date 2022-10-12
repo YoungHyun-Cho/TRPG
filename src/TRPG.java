@@ -33,14 +33,13 @@ public class TRPG {
             Enemy enemy = enemies[(int) (Math.random() * enemies.length)];
 
             System.out.printf("🚨 야생의 %s🧟이(가) 나타났습니다. 🚨\n", enemy.getName());
-            System.out.println("*".repeat(70));
 
             while (enemy.getHp() > 0) {
 
-                printBattleStatus(enemy);
-
                 // 플레이어 턴
                 if (turn++ % 2 == 0) {
+                    System.out.println("*".repeat(70));
+                    printBattleStatus(enemy);
 
                     String action = "";
 
@@ -68,24 +67,23 @@ public class TRPG {
                         if (actionResult.getActionResultType() == ActionResultType.PLAYER_SUCCESS) break;
                     }
 
-                    try { Thread.sleep(2000); } catch (Exception e) {}
+//                    try { Thread.sleep(2000); } catch (Exception e) {}
 
                     if (enemy.getHp() < 0) {
                         printBattleResult(enemy);
                         try { Thread.sleep(2000); } catch (Exception e) {}
                         continue Game;
                     }
-                    System.out.println("*".repeat(70));
+//                    System.out.println("*".repeat(70));
                 }
 
                 // 몹의 턴
                 else {
                     ActionResult actionResult = enemy.action(player);
                     System.out.println(actionResult.getMessage());
+//                    System.out.println("*".repeat(70));
                     if (actionResult.getActionResultType() == ActionResultType.ENEMY_FAILURE_IS_STUNNED) continue;
-                    try { Thread.sleep(2000); } catch (Exception e) {}
                     if (player.getHp() < 0) return false;
-                    System.out.println("*".repeat(70));
                 }
             }
         }
@@ -121,10 +119,10 @@ public class TRPG {
             skillState += String.format("%-13s: %s\n", "🛡 가드 상태", ((Guardable) player.getWeapon()).isSurvivalMode() ? "ON ✅" : "OFF ⛔️");
 
         int attackRange = player.getWeapon().getAttackRange();
-        int playerEnemydistance = enemy.getPosition() - player.getPosition();
-        int distanceWithoutRange = playerEnemydistance - player.getWeapon().getAttackRange();
+        int playerEnemyDistance = enemy.getPosition() - player.getPosition();
+        int distanceWithoutRange = playerEnemyDistance - player.getWeapon().getAttackRange();
         if (distanceWithoutRange < 0) distanceWithoutRange = 0;
-        if (attackRange > playerEnemydistance) attackRange = playerEnemydistance;
+        if (attackRange > playerEnemyDistance) attackRange = playerEnemyDistance;
 
         String distanceVisualization = String.format("🧑🏻‍🦰%s%s🧟", "🔴".repeat(attackRange), "⚪️".repeat(distanceWithoutRange));
 

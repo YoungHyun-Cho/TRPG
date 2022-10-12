@@ -31,7 +31,6 @@ public class DefaultWeapon implements Weapon {
         else {
             int damage = this.damage + (int) (Math.random() * 5);
             enemy.takeDamage(damage);
-            System.out.printf("[🚨] 야생의 %s이 데미지 %d을(를) 입었습니다.\n", enemy.getName(), damage);
             return new ActionResult(
                     ActionResultType.PLAYER_SUCCESS,
                     String.format("[🚨] 딱밤 때리기를 시전하여 야생의 %s이 데미지 %d을(를) 입었습니다.\n", enemy.getName(), damage)
