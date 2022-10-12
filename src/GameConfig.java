@@ -1,16 +1,20 @@
 import items.Item;
 import items.potions.HpPotion;
 import items.potions.MpPotion;
-import items.weapons.BaseBallBat;
+import items.weapons.TwoHandedWeapon;
 import items.weapons.DefaultWeapon;
-import items.weapons.HammerAndShield;
-import items.weapons.SlingShot;
+import items.weapons.OneHandedWeaponAndShield;
+import items.weapons.RangedWeapon;
 import subjects.Enemy;
 import subjects.Player;
 
 public class GameConfig {
 
     String playerName;
+
+    public GameConfig(String playerName) {
+        this.playerName = playerName;
+    }
 
     static class MpConsumption {
 
@@ -43,10 +47,6 @@ public class GameConfig {
         }
     }
 
-    public GameConfig(String playerName) {
-        this.playerName = playerName;
-    }
-
     public Player player() {
         return new Player(
                 playerName, 100, 100, 100, 100, 0, 10, 1, 0,
@@ -69,9 +69,9 @@ public class GameConfig {
         return new Item[] {
                 new HpPotion(100, 1),
                 new MpPotion(100, 1),
-                new BaseBallBat("야구 방망이", 50, 3, 0, false),
-                new HammerAndShield("뿅망치 & 냄비뚜껑", 20, 2, false, false),
-                new SlingShot("새총", 20, 10, 0)
+                new TwoHandedWeapon("야구 방망이", 50, 3, 0, false),
+                new OneHandedWeaponAndShield("뿅망치 & 냄비뚜껑", 20, 2, false, false),
+                new RangedWeapon("새총", 20, 10, 0)
         };
     }
 

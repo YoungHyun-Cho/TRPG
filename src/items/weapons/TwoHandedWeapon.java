@@ -1,5 +1,94 @@
 package items.weapons;
 
 import actions.ActionResult;
+import actions.ActionResultType;
+import subjects.Enemy;
+import subjects.Player;
 
-public interface TwoHandedWeapon extends Guardable, Chargeable {}
+public class TwoHandedWeapon implements Guardable, Chargeable {
+    private final String name;
+    private final int damage;
+    private final int attackRange;
+    private int charge;
+    private boolean survivalMode;
+
+    public TwoHandedWeapon(String name, int damage, int attackRange, int charge, boolean survivalMode) {
+        this.name = name;
+        this.damage = damage;
+        this.attackRange = attackRange;
+        this.charge = charge;
+        this.survivalMode = survivalMode;
+    }
+
+    @Override
+    public boolean isSurvivalMode() {
+        return survivalMode;
+    }
+
+    @Override
+    public void setSurvivalMode(boolean survivalMode) {
+        this.survivalMode = survivalMode;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public int getCharge() {
+        return charge;
+    }
+
+    @Override
+    public int getAttackRange() {
+        return attackRange;
+    }
+
+    @Override
+    public ActionResult normalAttack(Enemy enemy, int distance) {
+        if (attackRange < Math.abs(distance)) return new ActionResult(
+                ActionResultType.PLAYER_FAILURE_OUT_OF_RANGE,
+                "[🚫] 적이 사정거리 바깥에 있어 공격할 수 없습니다. 액션을 다시 선택해주세요."
+        );
+        else {
+            int temp = charge + 1;
+            charge = 0;
+            int damage = this.damage + (int) ((Math.random() * 5) + 30) * temp;
+            enemy.takeDamage(damage);
+            return new ActionResult(
+                    ActionResultType.PLAYER_SUCCESS,
+                    String.format("[🚨] %d차지 휘둘러치기를 시전하여 야생의 %s이 데미지 %d을(를) 입었습니다.", temp - 1, enemy.getName(), damage)
+            );
+        }
+    }
+
+    @Override
+    public ActionResult skillAttack(Enemy enemy, int distance) { return charge(); }
+
+    @Override
+    public ActionResult skillSurvival(Player player, Enemy enemy) {
+        return guard();
+    }
+
+    @Override
+    public ActionResult charge() {
+        if (charge < 3) return new ActionResult(
+                ActionResultType.PLAYER_SUCCESS,
+                String.format("[🚨] 차지를 시전합니다. 현재 차지 레벨 : %d", ++charge)
+        );
+        else return new ActionResult(
+                ActionResultType.PLAYER_FAILURE_CANNOT_CHARGE_MORE,
+                "[🚨] 더 이상 차지할 수 없습니다."
+        );
+    }
+
+    @Override
+    public ActionResult guard() {
+        setSurvivalMode(true);
+        return new ActionResult(
+                ActionResultType.PLAYER_SUCCESS,
+                "[🚨] 야구 방망이로 다음 턴의 공격을 1회 가드합니다."
+        );
+    }
+}

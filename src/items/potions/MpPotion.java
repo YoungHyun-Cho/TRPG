@@ -2,8 +2,7 @@ package items.potions;
 
 public class MpPotion implements Potion {
     private String name = "MP 포션";
-    private int quality;
-
+    private final int quality;
     private int quantity;
 
     public MpPotion(int quality, int quantity) {

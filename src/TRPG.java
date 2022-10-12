@@ -60,7 +60,7 @@ public class TRPG {
                             case "+": break Game;
                             default: actionResult = new ActionResult(
                                     ActionResultType.PLAYER_FAILURE_WRONG_NUMBER,
-                                    "[🚫] 잘못 입력하셨습니다. 정확한 번호를 입력해주세요.\n"
+                                    "[🚫] 잘못 입력하셨습니다. 정확한 번호를 입력해주세요."
                             );
                         }
 
